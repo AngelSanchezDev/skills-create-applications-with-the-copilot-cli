@@ -1,4 +1,4 @@
-const { add, subtract, multiply, divide, modulo, power, sqrt } = require('../calculator');
+const { add, subtract, multiply, divide, modulo, power, squareRoot } = require('../calculator');
 
 describe('Calculator functions (basic operations and extras)', () => {
   test('add: 2 + 3 = 5', () => {
@@ -30,6 +30,10 @@ describe('Calculator functions (basic operations and extras)', () => {
     expect(modulo(10, 3)).toBe(1);
   });
 
+  test('modulo: 5 % 2 = 1 (image example)', () => {
+    expect(modulo(5, 2)).toBe(1);
+  });
+
   test('modulo by zero throws MOD_ZERO code', () => {
     expect(() => modulo(5, 0)).toThrow(/Modulo by zero/);
     try {
@@ -44,14 +48,22 @@ describe('Calculator functions (basic operations and extras)', () => {
     expect(power(9, 0.5)).toBeCloseTo(3);
   });
 
-  test('sqrt: 9 -> 3', () => {
-    expect(sqrt(9)).toBe(3);
+  test('power: 2 ^ 3 (image example)', () => {
+    expect(power(2, 3)).toBe(8);
   });
 
-  test('sqrt negative throws NEG_SQRT code', () => {
-    expect(() => sqrt(-4)).toThrow(/Square root of negative number/);
+  test('squareRoot: 9 -> 3', () => {
+    expect(squareRoot(9)).toBe(3);
+  });
+
+  test('squareRoot: 16 -> 4 (image example)', () => {
+    expect(squareRoot(16)).toBe(4);
+  });
+
+  test('squareRoot negative throws NEG_SQRT code', () => {
+    expect(() => squareRoot(-4)).toThrow(/Square root of negative number/);
     try {
-      sqrt(-4);
+      squareRoot(-4);
     } catch (err) {
       expect(err.code).toBe('NEG_SQRT');
     }
