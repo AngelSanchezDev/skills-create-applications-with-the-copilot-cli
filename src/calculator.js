@@ -59,16 +59,16 @@ function power(a, b) {
   return Math.pow(a, b);
 }
 
-function sqrt(a) {
-  if (a < 0) {
+function squareRoot(n) {
+  if (n < 0) {
     const err = new Error('Square root of negative number');
     err.code = 'NEG_SQRT';
     throw err;
   }
-  return Math.sqrt(a);
+  return Math.sqrt(n);
 }
 
-module.exports = { add, subtract, multiply, divide, modulo, power, sqrt };
+module.exports = { add, subtract, multiply, divide, modulo, power, squareRoot };
 
 function usage(code = 0) {
   console.error('Usage: node src/calculator.js <op> <num1> [num2]');
@@ -134,7 +134,8 @@ if (require.main === module) {
         break;
       case 'sqrt':
       case 'squareroot':
-        result = sqrt(a);
+      case 'squareroot':
+        result = squareRoot(a);
         break;
       default:
         console.error(`Unknown operation: ${op}`);
