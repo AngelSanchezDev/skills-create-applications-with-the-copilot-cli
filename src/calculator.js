@@ -46,19 +46,43 @@ function divide(a, b) {
   return a / b;
 }
 
-module.exports = { add, subtract, multiply, divide };
+function modulo(a, b) {
+  if (b === 0) {
+    const err = new Error('Modulo by zero');
+    err.code = 'MOD_ZERO';
+    throw err;
+  }
+  return a % b;
+}
+
+function power(a, b) {
+  return Math.pow(a, b);
+}
+
+function sqrt(a) {
+  if (a < 0) {
+    const err = new Error('Square root of negative number');
+    err.code = 'NEG_SQRT';
+    throw err;
+  }
+  return Math.sqrt(a);
+}
+
+module.exports = { add, subtract, multiply, divide, modulo, power, sqrt };
 
 function usage(code = 0) {
-  console.error('Usage: node src/calculator.js <op> <num1> <num2>');
-  console.error('  <op>  : add | sub | mul | div');
+  console.error('Usage: node src/calculator.js <op> <num1> [num2]');
+  console.error('  <op>  : add | sub | mul | div | mod | pow | sqrt');
+  console.error('  sqrt uses a single operand: node src/calculator.js sqrt 9');
   console.error('Examples:');
   console.error('  node src/calculator.js add 2 3');
+  console.error('  node src/calculator.js sqrt 9');
   process.exit(code);
 }
 
 if (require.main === module) {
   const args = process.argv.slice(2);
-  if (args.length !== 3) {
+  if (args.length < 2 || args.length > 3) {
     usage(1);
   }
 
@@ -67,7 +91,15 @@ if (require.main === module) {
 
   try {
     a = parseNumber(aRaw);
-    b = parseNumber(bRaw);
+    if (op === 'sqrt' || op === 'sqrt') {
+      // sqrt expects only one operand
+      b = undefined;
+    } else {
+      if (typeof bRaw === 'undefined') {
+        usage(1);
+      }
+      b = parseNumber(bRaw);
+    }
   } catch (err) {
     console.error(`Error: ${err.message}`);
     process.exit(1);
@@ -91,6 +123,19 @@ if (require.main === module) {
       case 'divide':
         result = divide(a, b);
         break;
+      case 'mod':
+      case 'modulo':
+        result = modulo(a, b);
+        break;
+      case 'pow':
+      case 'exp':
+      case 'power':
+        result = power(a, b);
+        break;
+      case 'sqrt':
+      case 'squareroot':
+        result = sqrt(a);
+        break;
       default:
         console.error(`Unknown operation: ${op}`);
         usage(1);
@@ -103,6 +148,14 @@ if (require.main === module) {
     if (err && err.code === 'DIV_ZERO') {
       console.error('Error: Division by zero is not allowed.');
       process.exit(2);
+    }
+    if (err && err.code === 'MOD_ZERO') {
+      console.error('Error: Modulo by zero is not allowed.');
+      process.exit(3);
+    }
+    if (err && err.code === 'NEG_SQRT') {
+      console.error('Error: Square root of negative number is not allowed.');
+      process.exit(4);
     }
     console.error(`Error: ${err.message || String(err)}`);
     process.exit(1);
